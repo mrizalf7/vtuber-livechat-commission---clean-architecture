@@ -1,5 +1,5 @@
 # vtuber-livechat-commission app
-This is a restful api golang project using gin web framework,docker,jwt,rdbms with 4 tables,postgres database,login,register.
+This is a restful api golang project using gin web framework, docker, jwt, rdbms with 4 tables, postgres database, login, & register.
 
 # Documentation
 ## health 
