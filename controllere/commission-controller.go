@@ -8,7 +8,7 @@ import (
 	// "fmt"
 	// "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	// "main/dto"
+	"main/dto"
 	"main/entity"
 	"main/helper"
 	"main/middleware"
@@ -47,7 +47,7 @@ func (c *commissionController) GetCommission(context *gin.Context) {
 }
 
 func (c *commissionController) FindCommissionById(context *gin.Context) {
-	var CommissionFindByIdDTO entity.Commission
+	// var CommissionFindByIdDTO entity.Commission
 	id, err := strconv.ParseUint(context.Param("id"), 0, 0)
 	if err != nil {
 		res := helper.BuildErrorResponse("No param id was found", err.Error(), helper.EmptyObj{})
@@ -59,15 +59,14 @@ func (c *commissionController) FindCommissionById(context *gin.Context) {
 		res := helper.BuildErrorResponse("Data not found", "No data with given id", helper.EmptyObj{})
 		context.JSON(http.StatusNotFound, res)
 	} else {
-		CommissionFindByIdDTO.ID = id
-		res := helper.BuildResponse(true, "OK", CommissionFindByIdDTO)
+		res := helper.BuildResponse(true, "OK", selectedCommission)
 		context.JSON(http.StatusOK, res)
 	}
 }
 
 func (c *commissionController) InsertCommission(context *gin.Context) {
-	// var CommissionCreateDTO dto.CommissionCreateDTO
-	var CommissionCreateDTO entity.Commission
+	var CommissionCreateDTO dto.CommissionCreateDTO
+	// var CommissionCreateDTO entity.Commission
 	errDTO := context.ShouldBind(&CommissionCreateDTO)
 	if errDTO != nil {
 		res := helper.BuildErrorResponse("Failed to process request", errDTO.Error(), helper.EmptyObj{})
@@ -80,8 +79,8 @@ func (c *commissionController) InsertCommission(context *gin.Context) {
 	}
 
 func (c *commissionController) UpdateCommission(context *gin.Context) {
-	// var CommissionUpdateDTO dto.CommissionUpdateDTO
-	var CommissionUpdateDTO entity.Commission
+	var CommissionUpdateDTO dto.CommissionUpdateDTO
+	// var CommissionUpdateDTO entity.Commission
 	id := context.Param("id")
 	idUint64,err := strconv.ParseUint(id,10,64)
 	if err!=nil{
@@ -89,9 +88,9 @@ func (c *commissionController) UpdateCommission(context *gin.Context) {
 		context.JSON(http.StatusBadRequest,response)
 		return
 	}
-	commission := c.CommissionService.FindCommissionById(idUint64)
+	selectedCommission := c.CommissionService.FindCommissionById(idUint64)
 	var commissionOnlyStruct entity.Commission
-	if(commission == commissionOnlyStruct){
+	if(selectedCommission == commissionOnlyStruct){
 		res:= helper.BuildErrorResponse("Data not found","No data with given id",helper.EmptyObj{})
 		context.JSON(http.StatusNotFound,res)
 		return
@@ -124,7 +123,7 @@ func (c *commissionController) DeleteCommission(context *gin.Context) {
 	}
 	CommissionDeleteDTO.ID = id
 	c.CommissionService.DeleteCommission(CommissionDeleteDTO)
-	res := helper.BuildResponse(true, "Deleted", helper.EmptyObj{})
+	res := helper.BuildResponse(true, "Deleted", selectedCommission)
 	context.JSON(http.StatusOK, res)
 }
 

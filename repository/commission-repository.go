@@ -26,14 +26,17 @@ func NewCommissionRepository(dbConn *gorm.DB) Commission {
 
 func (db *CommissionConnection) InsertCommission(p entity.Commission) entity.Commission {
 
-	db.connection.Save(&p)
-	db.connection.Preload("Project").Preload("PriceList.Project").Find(&p)
+	// db.connection.Save(&p)
+	db.connection.Create(&p)
+	// db.connection.Preload("Project").Preload("PriceList.Project").Find(&p)
+	db.connection.Preload("PriceList.Project").Preload("Project").Find(&p)
+	// db.connection.Preload("Project").Find(&p)
 	return p
 }
 
 func (db *CommissionConnection) GetCommission() []entity.Commission {
 	var p []entity.Commission
-	db.connection.Preload("Project").Preload("PriceList.Project").Find(&p)
+	db.connection.Order("id asc").Preload("Project").Preload("PriceList.Project").Find(&p)
 	return p
 }
 

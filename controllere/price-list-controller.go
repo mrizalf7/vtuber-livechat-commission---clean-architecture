@@ -79,15 +79,20 @@ func (c *priceListController) InsertPriceList(context *gin.Context) {
 
 func (c *priceListController) UpdatePriceList(context *gin.Context) {
 	var priceListUpdateDTO dto.PriceListUpdateDTO
-
 	id := context.Param("id")
 	idUint64,err := strconv.ParseUint(id,10,64)
 	if err!= nil {
 		response := helper.BuildErrorResponse("Failed tou get id", "No param id were found", helper.EmptyObj{})
 		context.JSON(http.StatusBadRequest, response)
 	}
+	var PriceList entity.PriceList = c.priceListService.FindPriceListById(idUint64)
+	var priceListOnlyStruct entity.PriceList
+	if (PriceList == priceListOnlyStruct) {
+		res := helper.BuildErrorResponse("Data not found", "No data with given id", helper.EmptyObj{})
+		context.JSON(http.StatusNotFound, res)
+		return
+	}
 	priceListUpdateDTO.ID = idUint64
-
 	errDTO := context.ShouldBind(&priceListUpdateDTO)
 	if errDTO != nil {
 		res := helper.BuildErrorResponse("Failed to process request", errDTO.Error(), helper.EmptyObj{})
@@ -130,7 +135,7 @@ func (c *priceListController) DeletePriceList(context *gin.Context) {
 	}
 	priceList.ID = id
 	c.priceListService.DeletePriceList(priceList)
-	res := helper.BuildResponse(true, "Deleted", helper.EmptyObj{})
+	res := helper.BuildResponse(true, "Deleted", selectedPriceList)
 	context.JSON(http.StatusOK, res)
 }
 

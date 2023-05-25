@@ -1,18 +1,19 @@
 package service
 
-
 import (
-	"main/repository"
-	"main/entity"
-	"github.com/mashingan/smapping"
-	"log"
 	"fmt"
+	"log"
+	"main/dto"
+	"main/entity"
+	"main/repository"
+
+	"github.com/mashingan/smapping"
 )
 
 
 type CommissionService interface {
-	InsertCommission(p entity.Commission) entity.Commission
-	UpdateCommission(p entity.Commission) entity.Commission
+	InsertCommission(p dto.CommissionCreateDTO) entity.Commission
+	UpdateCommission(p dto.CommissionUpdateDTO) entity.Commission
 	GetCommission() []entity.Commission
 	DeleteCommission(p entity.Commission)
 	FindCommissionById(id uint64) entity.Commission
@@ -29,7 +30,7 @@ func NewCommissionService(commissionRepo repository.Commission) CommissionServic
 }
 
 
-func (service *Commission) InsertCommission(p entity.Commission) entity.Commission {
+func (service *Commission) InsertCommission(p dto.CommissionCreateDTO) entity.Commission {
 	Commission := entity.Commission{}
 	err := smapping.FillStruct(&Commission, smapping.MapFields(&p))
 	if err != nil {
@@ -39,7 +40,7 @@ func (service *Commission) InsertCommission(p entity.Commission) entity.Commissi
 	return res
 }
 
-func (service *Commission) UpdateCommission(p entity.Commission) entity.Commission {
+func (service *Commission) UpdateCommission(p dto.CommissionUpdateDTO) entity.Commission {
 	Commission := entity.Commission{}
 	err := smapping.FillStruct(&Commission, smapping.MapFields(&p))
 	if err != nil {

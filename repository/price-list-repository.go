@@ -36,7 +36,7 @@ func (db *priceListConnection) InsertPriceList(p entity.PriceList) entity.PriceL
 
 func (db *priceListConnection) GetPriceList() []entity.PriceList {
 	var p []entity.PriceList
-	db.connection.Preload("Project").Find(&p)
+	db.connection.Order("id asc").Preload("Project").Find(&p)
 	return p
 }
 
